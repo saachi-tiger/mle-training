@@ -1,0 +1,3 @@
+#ignoring specific extension type
+*.pyc
+*.csv
