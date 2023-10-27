@@ -1,32 +1,29 @@
+import os
 import numpy as np
-import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import os
 import tarfile
-from six.moves import urllib
-
-
-DOWNLOAD_ROOT = "https://raw.githubusercontent.com/ageron/handson-ml/master/"
-HOUSING_PATH = os.path.join("datasets", "housing")
-HOUSING_URL = DOWNLOAD_ROOT + "datasets/housing/housing.tgz"
-
-def fetch_housing_data(housing_url=HOUSING_URL, housing_path=HOUSING_PATH):
-    os.makedirs(housing_path, exist_ok=True)
-    tgz_path = os.path.join(housing_path, "housing.tgz")
-    urllib.request.urlretrieve(housing_url, tgz_path)
-    housing_tgz = tarfile.open(tgz_path)
-    housing_tgz.extractall(path=housing_path)
-    housing_tgz.close()
-
 import pandas as pd
 
-def load_housing_data(housing_path=HOUSING_PATH):
-    csv_path = os.path.join(housing_path, "housing.csv")
-    return pd.read_csv(csv_path)
 
-housing = load_housing_data
+# DOWNLOAD_ROOT = "https://github.com/ageron/handson-ml/tree/master/"
+# HOUSING_PATH = os.path.join(DOWNLOAD_ROOT,"datasets", "housing")
+# HOUSING_URL = DOWNLOAD_ROOT + "datasets/housing/housing.tgz"
 
+# def fetch_housing_data(housing_url=HOUSING_URL, housing_path=HOUSING_PATH):
+#     os.makedirs(housing_path, exist_ok=True)
+#     tgz_path = os.path.join(housing_path, "housing.tgz")
+#     urllib.request.urlretrieve(housing_url, tgz_path)
+#     housing_tgz = tarfile.open(tgz_path)
+#     housing_tgz.extractall(path=housing_path)
+#     housing_tgz.close()
+
+# def load_housing_data(housing_path=HOUSING_PATH):
+#     csv_path = os.path.join(housing_path, "housing.csv")
+#     return pd.read_csv(csv_path)
+
+housing = pd.read_csv("https://raw.githubusercontent.com/ageron/handson-ml/master/datasets/housing/housing.csv")
+# print(housing.shape)
 from sklearn.model_selection import train_test_split
 
 train_set, test_set = train_test_split(housing, test_size=0.2, random_state=42)
@@ -63,7 +60,9 @@ housing = strat_train_set.copy()
 housing.plot(kind="scatter", x="longitude", y="latitude")
 housing.plot(kind="scatter", x="longitude", y="latitude", alpha=0.1)
 
-corr_matrix = housing.corr()
+corr_matrix = housing[['longitude', 'latitude', 'housing_median_age', 'total_rooms',
+       'total_bedrooms', 'population', 'households', 'median_income',
+       'median_house_value']].corr(method ='pearson')
 corr_matrix["median_house_value"].sort_values(ascending=False)
 housing["rooms_per_household"] = housing["total_rooms"]/housing["households"]
 housing["bedrooms_per_room"] = housing["total_bedrooms"]/housing["total_rooms"]
